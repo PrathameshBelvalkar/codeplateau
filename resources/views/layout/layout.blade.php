@@ -82,41 +82,53 @@
             myDropzone.on("complete", function(file) {
                 if (myDropzone.getUploadingFiles().length === 0) {
                     $(".dz-progress").hide();
-                    // $(".dz-remove").hide();
                 }
             });
+
             myDropzone.on("error", function(file, response) {
+                console.log(response);
+
                 if (response.errors) {
                     myDropzone.removeFile(file);
                     response.errors.forEach((error) => {
                         toastr.error(error);
-
                     });
+                } else if (response.message) {
+                    toastr.error(response.message);
                 }
-
             });
+
             myDropzone.on("success", function(file, response) {
                 const data = response.data;
-                $('#example').show();
-                const table = $('#example').DataTable({
-                    // dom: 'Bfrtip',
-                    layout: {
-                        topStart: {
-                            buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
-                        }
+                if (response.code === 200) {
+                    $('#example').show();
+                    $('#example_wrapper').show();
+                    if ($.fn.DataTable.isDataTable('#example')) {
+                        $('#example').DataTable().clear().destroy();
                     }
-                });
-                table.clear();
-                data.data.forEach((item, index) => {
-                    table.row.add([
-                        index + 1,
-                        item[1],
-                        item[2],
-                        item[3],
-                    ]);
-                });
-                table.draw();
-                myDropzone.removeFile(file);
+                    const table = $('#example').DataTable({
+                        layout: {
+                            // topStart: {
+                            //     buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                            // }
+                        },
+                    });
+
+                    table.clear();
+                    const headers = data.header;
+                    const headerRow = headers.map(header => `<th>${header}</th>`).join('');
+                    $('#example thead').html(`<tr>${headerRow}</tr>`);
+                    data.data.forEach((item) => {
+                        table.row.add(item);
+                    });
+
+                    table.draw();
+                    myDropzone.removeFile(file);
+                } else {
+                    $('#example_wrapper').hide();
+                    toastr.error(response.message);
+                    myDropzone.removeFile(file);
+                }
             });
         }
     };
@@ -124,7 +136,11 @@
     $(document).ready(function() {
         $('.dz-button').addClass('h-100');
         $('#example').hide();
-
+        if (typeof $.fn.dataTable !== 'undefined') {
+            $.fn.dataTable.ext.errMode = 'none';
+        } else {
+            console.error('DataTables library is not loaded.');
+        }
     });
 </script>
 

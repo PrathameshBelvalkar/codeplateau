@@ -16,6 +16,18 @@ class FileController extends Controller
             $path = $request->file('file')->store('public/uploads');
             $filePath = Storage::path($path);
             $data = getcsvdata($filePath);
+            $requiredFields = ['Certificate Name', 'Cource Code', 'Name'];
+            $header = $data['header'];
+            foreach ($requiredFields as $field) {
+                if (!in_array($field, $header)) {
+                    return generateResponse([
+                        'type' => "error",
+                        'status' => false,
+                        'code' => 500,
+                        'message' => "Error: Required field '$field' is missing in CSV.",
+                    ], );
+                }
+            }
             return generateResponse([
                 'type' => "success",
                 'status' => true,
