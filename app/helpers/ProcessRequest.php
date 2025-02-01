@@ -9,7 +9,8 @@ if (!function_exists('getcsvdata')) {
         if (!empty($data) && isset($data[0])) {
             $header = $data[0][0];
             $header = array_unique($header);
-            $rows = $data[0];
+            array_unshift($header, 'sr no');
+            $rows = array_slice($data[0], 1);
         } else {
             $header = [];
             $rows = [];

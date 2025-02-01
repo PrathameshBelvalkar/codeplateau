@@ -118,8 +118,8 @@
                     const headers = data.header;
                     const headerRow = headers.map(header => `<th>${header}</th>`).join('');
                     $('#example thead').html(`<tr>${headerRow}</tr>`);
-                    data.data.forEach((item) => {
-                        table.row.add(item);
+                    data.data.forEach((item, index) => {
+                        table.row.add([index + 1, ...item.slice(0, headers.length)]);
                     });
 
                     table.draw();
