@@ -6,7 +6,7 @@
                 <h1 class="text-center">Codeplateau Test</h1>
             </div>
         </div>
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-md-12">
                 <p class="text-center">This is a simple Laravel application that demonstrates how to use Laravel with
                     Bootstrap.</p>
@@ -16,7 +16,7 @@
             <div class="col-md-12">
                 <p class="text-center">You can find the source code for this application on </p>
             </div>
-        </div>
+        </div> --}}
         <div class="row mt-4">
             <div class="col-md-12">
                 <form action="{{ route('upload') }}" class="dropzone" id="file-dropzone" method="post"
@@ -24,7 +24,7 @@
                     @csrf
                 </form>
                 <div class="d-flex justify-content-between mt-1">
-                    <div class="form-label dropzone-valid-label">only .csv | max:50mb</div>
+                    {{-- <div class="form-label dropzone-valid-label">only .csv | max:50mb</div> --}}
                     <div class="w-100"><button class="btn btn-primary w-100" id="upload-button">Upload</button></div>
                 </div>
 

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
         integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.1/css/buttons.dataTables.css">
     <title>Codeplateau</title>
     {{-- @vite('resources/css/app.css') --}}
 </head>
@@ -39,6 +40,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
     integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.1/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.print.min.js"></script>
 <script>
     Dropzone.options.fileDropzone = {
         paramName: "file",
@@ -62,7 +70,7 @@
                 if (myDropzone.getQueuedFiles().length > 0) {
                     myDropzone.processQueue();
                 } else {
-                    alert("Please select a file before uploading.");
+                    toastr.error("Please select a file before uploading.");
                 }
             });
 
@@ -74,14 +82,14 @@
             myDropzone.on("complete", function(file) {
                 if (myDropzone.getUploadingFiles().length === 0) {
                     $(".dz-progress").hide();
-                    $(".dz-remove").hide();
+                    // $(".dz-remove").hide();
                 }
             });
             myDropzone.on("error", function(file, response) {
                 if (response.errors) {
+                    myDropzone.removeFile(file);
                     response.errors.forEach((error) => {
-                        // alert(error);
-                        toastr.error('Error', error);
+                        toastr.error(error);
 
                     });
                 }
@@ -90,7 +98,14 @@
             myDropzone.on("success", function(file, response) {
                 const data = response.data;
                 $('#example').show();
-                const table = $('#example').DataTable();
+                const table = $('#example').DataTable({
+                    // dom: 'Bfrtip',
+                    layout: {
+                        topStart: {
+                            buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                        }
+                    }
+                });
                 table.clear();
                 data.data.forEach((item, index) => {
                     table.row.add([
@@ -101,6 +116,7 @@
                     ]);
                 });
                 table.draw();
+                myDropzone.removeFile(file);
             });
         }
     };
