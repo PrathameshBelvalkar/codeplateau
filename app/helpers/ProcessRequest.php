@@ -7,7 +7,8 @@ if (!function_exists('getcsvdata')) {
     {
         $data = Excel::toArray([], $filePath);
         if (!empty($data) && isset($data[0])) {
-            $header = array_shift($data[0]);
+            $header = $data[0][0];
+            $header = array_unique($header);
             $rows = $data[0];
         } else {
             $header = [];
