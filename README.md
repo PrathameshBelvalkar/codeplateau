@@ -1,6 +1,11 @@
-# CSV Import Instructions
+# CSV Import
 
 This guide provides instructions on how to import a CSV file and handle various scenarios during the import process.
+<a href="./tutorial.webm">
+<img src="./Screenshot 2025-02-03 203418.png" alt="Watch the video">
+</a>
+
+## Watch above video
 
 ## Instructions
 
