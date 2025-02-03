@@ -104,6 +104,12 @@
                             body: JSON.stringify(data),
                         });
                         console.log(data);
+                        const result = await response.json();
+                        if (result.code === 200) {
+                            toastr.success(result.message);
+                        } else {
+                            toastr.error(result.message);
+                        }
                     }
                     $('#example').show();
                     $('#example_wrapper').show();

@@ -50,24 +50,33 @@ class FileController extends Controller
     }
     public function addCSVData(Request $request)
     {
-        $data = $request->all();
-        // Log::info($data['header']);
-        // Log::info($data['data']);
+        try {
+            $data = $request->all();
+            // Log::info($data['header']);
+            // Log::info($data['data']);
 
-        foreach ($data['data'] as $row) {
-            CertificateData::create([
-                'course_code' => $row[0],
-                'name' => $row[1],
-                'certificate_code' => $row[3],
+            foreach ($data['data'] as $row) {
+                CertificateData::create([
+                    'course_code' => $row[0],
+                    'name' => $row[1],
+                    'certificate_name' => $row[3],
+                ]);
+            }
+
+            return generateResponse([
+                'type' => "success",
+                'status' => true,
+                'code' => 200,
+                'message' => 'Data saved successfully',
+            ]);
+        } catch (\Exception $e) {
+            return generateResponse([
+                'type' => "error",
+                'status' => false,
+                'code' => 500,
+                'message' => 'something went wrong',
             ]);
         }
-
-        return generateResponse([
-            'type' => "success",
-            'status' => true,
-            'code' => 200,
-            'message' => 'File uploaded successfully',
-        ]);
     }
 
 }
