@@ -31,6 +31,9 @@
                     </thead>
                     <tbody>
                 </table>
+                <div class="d-flex justify-content-end mt-2">
+                    <button class="btn btn-success btn-block d-none" id="saveToDatabase">Save To Database</button>
+                </div>
             </div>
         </div>
     </div>

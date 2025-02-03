@@ -41,12 +41,6 @@
     integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.datatables.net/buttons/3.2.1/js/dataTables.buttons.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.dataTables.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.print.min.js"></script>
 <script>
     Dropzone.options.fileDropzone = {
         paramName: "file",
@@ -97,12 +91,26 @@
                     toastr.error(response.message);
                 }
             });
-
+            let data;
             myDropzone.on("success", function(file, response) {
-                const data = response.data;
+                data = response.data;
                 if (response.code === 200) {
+                    const savetoDatabase = async () => {
+                        const response = await fetch('http://localhost:8000/api/v1/save', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data),
+                        });
+                        console.log(data);
+                    }
                     $('#example').show();
                     $('#example_wrapper').show();
+                    $('#saveToDatabase').removeClass('d-none');
+                    $('#saveToDatabase').on('click', function() {
+                        savetoDatabase();
+                    });
                     if ($.fn.DataTable.isDataTable('#example')) {
                         $('#example').DataTable().clear().destroy();
                     }
@@ -116,11 +124,13 @@
 
                     table.clear();
                     const headers = data.header;
+                    console.log(headers);
                     const headerRow = headers.map(header => `<th>${header}</th>`).join('');
                     $('#example thead').html(`<tr>${headerRow}</tr>`);
                     data.data.forEach((item, index) => {
                         table.row.add([index + 1, ...item.slice(0, headers.length)]);
                     });
+                    console.log(data.data);
 
                     table.draw();
                     myDropzone.removeFile(file);
@@ -128,6 +138,7 @@
                     $('#example_wrapper').hide();
                     toastr.error(response.message);
                     myDropzone.removeFile(file);
+                    $('#saveToDatabase').addClass('d-none');
                 }
             });
         }
@@ -141,6 +152,7 @@
         } else {
             console.error('DataTables library is not loaded.');
         }
+
     });
 </script>
 

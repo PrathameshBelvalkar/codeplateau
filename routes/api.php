@@ -21,4 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'], function () {
     Route::post('/upload', action: [FileController::class, 'upload'])->name('upload');
+    Route::post('/save', action: [FileController::class, 'addCSVData']);
 });

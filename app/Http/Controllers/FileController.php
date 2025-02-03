@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\File\FileRequest;
+use App\Models\CertificateData;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -45,6 +47,27 @@ class FileController extends Controller
                 'message' => 'something went wrong',
             ]);
         }
+    }
+    public function addCSVData(Request $request)
+    {
+        $data = $request->all();
+        // Log::info($data['header']);
+        // Log::info($data['data']);
+
+        foreach ($data['data'] as $row) {
+            CertificateData::create([
+                'course_code' => $row[0],
+                'name' => $row[1],
+                'certificate_code' => $row[3],
+            ]);
+        }
+
+        return generateResponse([
+            'type' => "success",
+            'status' => true,
+            'code' => 200,
+            'message' => 'File uploaded successfully',
+        ]);
     }
 
 }

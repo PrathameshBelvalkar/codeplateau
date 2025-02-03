@@ -10,7 +10,7 @@ class CertificateData extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'certificate_code',
+        'certificate_name',
         'course_code',
     ];
 }
